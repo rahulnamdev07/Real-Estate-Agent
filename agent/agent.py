@@ -11,7 +11,7 @@ from langgraph.graph import StateGraph
 from langgraph.actions.tool import ToolAction
 
 async def main():
-    os.environ["GOOGLE_API_KEY"] = "AIzaSyA90bAktAuEk37am9sRe_gYHxu3_7tjb3Y"
+    os.environ["GOOGLE_API_KEY"] = ""
 
     # Connect to MCP server
     client = MultiServerMCPClient(
