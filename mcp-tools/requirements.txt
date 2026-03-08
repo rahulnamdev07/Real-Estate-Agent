@@ -1,0 +1,7 @@
+mcp
+mcp[cli]
+httpx 
+geopy
+googlemaps
+python-dotenv
+requests
