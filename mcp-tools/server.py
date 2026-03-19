@@ -21,6 +21,7 @@ from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 import requests
 import ee
+ee.Authenticate()
 ee.Initialize(project='real-estate-agent-489610')
 print(ee.String('Hello from Earth Engine!').getInfo())
 
@@ -264,3 +265,6 @@ def get_historical_development_images(latitude: float, longitude: float) -> str:
 # -----------------------------
 if __name__ == "__main__":
     mcp.run()
+
+
+# 23.2335177,77.4325731
