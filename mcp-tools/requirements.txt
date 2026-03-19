@@ -5,3 +5,7 @@ geopy
 googlemaps
 python-dotenv
 requests
+langchain_google_genai
+langchain-mcp-adapters
+langgraph
+langchain

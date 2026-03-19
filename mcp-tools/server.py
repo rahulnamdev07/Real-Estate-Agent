@@ -14,7 +14,8 @@
 import os
 import asyncio
 import httpx
-from geopy.geocoders import Nominatim
+#from geopy.geocoders import Nominatim
+#import googlemaps
 from mcp.server.fastmcp import FastMCP
 import googlemaps
 from mcp.server.fastmcp import FastMCP
@@ -28,28 +29,37 @@ print(ee.String('Hello from Earth Engine!').getInfo())
 # Load API Key from .env file
 load_dotenv()
 api_key = os.getenv("GOOGLE_MAPS_API_KEY")
-#gmaps = googlemaps.Client(key=api_key)
+gmaps = googlemaps.Client(key=os.getenv("GOOGLE_MAPS_API_KEY"))
 
 mcp = FastMCP("real-estate-agent", log_level="ERROR")
 
-geolocator = Nominatim(user_agent="real_estate_mcp")
+#geolocator = Nominatim(user_agent="real_estate_mcp")
 
 # -----------------------------
-# TOOL 1: Get Latitude Longitude
+# TOOL 1: Get Latitude Longitude (Google Maps)
 # -----------------------------
 @mcp.tool()
 async def get_coordinates(place: str, city: str):
     """
-    Takes place name and city and returns latitude and longitude.
+    Takes place name and city and returns latitude and longitude using Google Maps API.
     """
-    query = f"{place}, {city}, India"
-    location = geolocator.geocode(query)
+    try:
+        query = f"{place}, {city}, India"
 
-    if not location:
-        return "Location not found"
+        geocode_result = gmaps.geocode(query)
 
-    return f"{location.latitude},{location.longitude}"
+        if not geocode_result:
+            return "Location not found"
 
+        location = geocode_result[0]["geometry"]["location"]
+
+        lat = location["lat"]
+        lng = location["lng"]
+
+        return f"{lat},{lng}"
+
+    except Exception as e:
+        return f"Error fetching coordinates: {str(e)}"
 
 # -----------------------------
 # TOOL 2: Area Statistics
@@ -142,7 +152,7 @@ def get_neighborhood_insights(latitude: float, longitude: float, radius_m: float
     url = "https://places.googleapis.com/v1/places:searchNearby"
     headers = {
         "Content-Type": "application/json",
-        "X-Goog-Api-Key": API_KEY,
+        "X-Goog-Api-Key": api_key,
         "X-Goog-FieldMask": "places.displayName,places.rating,places.types"
     }
     
